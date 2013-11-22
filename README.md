@@ -1,10 +1,10 @@
 # Llt::Segmenter
 
 [![Version](http://allthebadges.io/latin-language-toolkit/llt-segmenter/badge_fury.png)](http://allthebadges.io/latin-language-toolkit/llt-segmenter/badge_fury)
+[![Build Status](https://travis-ci.org/latin-language-toolkit/llt-segmenter.png?branch=master)](https://travis-ci.org/latin-language-toolkit/llt-segmenter)
 [![Dependencies](http://allthebadges.io/latin-language-toolkit/llt-segmenter/gemnasium.png)](http://allthebadges.io/latin-language-toolkit/llt-segmenter/gemnasium)
-[![Build Status](http://allthebadges.io/latin-language-toolkit/llt-segmenter/travis.png)](http://allthebadges.io/latin-language-toolkit/llt-segmenter/travis)
-[![Coverage](http://allthebadges.io/latin-language-toolkit/llt-segmenter/coveralls.png)](http://allthebadges.io/latin-language-toolkit/llt-segmenter/coveralls)
-[![Code Climate](http://allthebadges.io/latin-language-toolkit/llt-segmenter/code_climate.png)](http://allthebadges.io/latin-language-toolkit/llt-segmenter/code_climate)
+[![Coverage](https://coveralls.io/repos/latin-language-toolkit/llt-segmenter/badge.png?branch=master)](https://coveralls.io/r/latin-language-toolkit/llt-segmenter?branch=master)
+[![Code Climate](https://codeclimate.com/github/latin-language-toolkit/llt-segmenter.png)](https://codeclimate.com/github/latin-language-toolkit/llt-segmenter)
 
 Segments text into sentences.
 
