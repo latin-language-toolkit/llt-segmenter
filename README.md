@@ -26,6 +26,16 @@ Or install it yourself as:
 
 TODO: Write usage instructions here
 
+## API
+This currently is a list of requirements and will transform into an API documentation.
+
+Input:
+- Text or (URI)
+- Black-/Whitelist for separators.
+
+Output:
+- XML (TEI) or JSON
+
 ## Contributing
 
 1. Fork it
