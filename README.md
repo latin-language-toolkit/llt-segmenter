@@ -1,4 +1,4 @@
-# Llt::Segmenter
+# LLT::Segmenter
 
 [![Version](http://allthebadges.io/latin-language-toolkit/llt-segmenter/badge_fury.png)](http://allthebadges.io/latin-language-toolkit/llt-segmenter/badge_fury)
 [![Build Status](https://travis-ci.org/latin-language-toolkit/llt-segmenter.png?branch=master)](https://travis-ci.org/latin-language-toolkit/llt-segmenter)
