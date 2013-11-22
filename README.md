@@ -1,6 +1,12 @@
 # Llt::Segmenter
 
-TODO: Write a gem description
+[![Version](http://allthebadges.io/latin-language-toolkit/llt-segmenter/badge_fury.png)](http://allthebadges.io/latin-language-toolkit/llt-segmenter/badge_fury)
+[![Dependencies](http://allthebadges.io/latin-language-toolkit/llt-segmenter/gemnasium.png)](http://allthebadges.io/latin-language-toolkit/llt-segmenter/gemnasium)
+[![Build Status](http://allthebadges.io/latin-language-toolkit/llt-segmenter/travis.png)](http://allthebadges.io/latin-language-toolkit/llt-segmenter/travis)
+[![Coverage](http://allthebadges.io/latin-language-toolkit/llt-segmenter/coveralls.png)](http://allthebadges.io/latin-language-toolkit/llt-segmenter/coveralls)
+[![Code Climate](http://allthebadges.io/latin-language-toolkit/llt-segmenter/code_climate.png)](http://allthebadges.io/latin-language-toolkit/llt-segmenter/code_climate)
+
+Segments text into sentences.
 
 ## Installation
 
