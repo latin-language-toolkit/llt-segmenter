@@ -1,7 +1,50 @@
-require "llt/segmenter/version"
+module LLT
+  class Segmenter
+    uses_logger { Logger.new('Segmenter', default: :debug) }
 
-module Llt
-  module Segmenter
-    # Your code goes here...
+    include Constants::Abbreviations
+
+    SENTENCE_CLOSER = /(?<!#{ALL_ABBRS_PIPED})\.(?!\.)|[;\?!:]|\n{2}/
+    DIRECT_SPEECH_DELIMITER = /['"”]/
+    TRAILERS = /\)/
+
+    def segment(string, add_to: nil)
+      # dump whitespace at the beginning and end!
+      string.strip!
+      sentences = scan_through_string(StringScanner.new(string))
+      add_to << sentences if add_to.respond_to?(:<<)
+      sentences
+    end
+
+    private
+
+    def scan_through_string(scanner, sentences = [])
+      while scanner.rest?
+        sentence = scanner.scan_until(SENTENCE_CLOSER) ||
+          handle_broken_off_texts_or_raise(sentences, scanner)
+        sentence << trailing_delimiters(scanner)
+
+        sentence.strip!
+        @logger.log("#{'Segmented '.green} #{sentences.size.to_s.cyan} #{sentence}")
+        sentences << LLT::Sentence.new(sentence)
+      end
+      sentences
+    end
+
+    def handle_broken_off_texts_or_raise(sentences, scanner)
+      if sentences.any?
+        # broken off texts
+        scanner.scan_until(/$/)
+      else
+        raise ArgumentError.new('No delimiters present!')
+      end
+    end
+
+    def trailing_delimiters(scanner)
+      trailers = [DIRECT_SPEECH_DELIMITER, TRAILERS]
+      trailers.each_with_object('') do |trailer, str|
+        str << scanner.scan(trailer).to_s # catches nil
+      end
+    end
   end
 end

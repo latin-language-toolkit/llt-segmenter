@@ -5,7 +5,7 @@ require 'llt/segmenter/version'
 
 Gem::Specification.new do |spec|
   spec.name          = "llt-segmenter"
-  spec.version       = Llt::Segmenter::VERSION
+  spec.version       = LLT::Segmenter::VERSION
   spec.authors       = ["Gernot Höflechner, Robert Lichstensteiner, Christof Sirk"]
   spec.email         = ["latin.language.toolkit@gmail.com"]
   spec.description   = %q{Segments text into sentences}
