@@ -5,6 +5,6 @@ gemspec
 
 gem 'coveralls', require: false
 
-gem 'llt-core', path: '../../llt/llt-core'
+gem 'llt-core', path: '../llt-core'
 gem 'llt-constants', path: '../llt-constants'
 gem 'llt-logger', path: '../llt-logger'
