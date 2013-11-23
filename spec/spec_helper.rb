@@ -15,6 +15,9 @@ end
 $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
 require 'llt/segmenter'
 
+if defined?(LLT::Logger)
+ LLT::Logger.level = nil
+end
 
 RSpec.configure do |config|
   config.treat_symbols_as_metadata_keys_with_true_values = true

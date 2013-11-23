@@ -1,11 +1,9 @@
 require 'llt/core/containable'
 
 module LLT
-  module Containers
-    class Sentence
-      include Containable
+  class Sentence
+    include Core::Containable
 
-      container_alias :tokens
-    end
+    container_alias :tokens
   end
 end

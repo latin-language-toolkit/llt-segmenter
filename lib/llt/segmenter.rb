@@ -1,8 +1,14 @@
+require "llt/constants"
+require "llt/core"
+require "llt/logger"
+require "llt/sentence"
+
 module LLT
   class Segmenter
-    uses_logger { Logger.new('Segmenter', default: :debug) }
-
     include Constants::Abbreviations
+    include Core::Serviceable
+
+    uses_logger { Logger.new('Segmenter', default: :debug) }
 
     SENTENCE_CLOSER = /(?<!#{ALL_ABBRS_PIPED})\.(?!\.)|[;\?!:]|\n{2}/
     DIRECT_SPEECH_DELIMITER = /['"”]/
@@ -26,7 +32,7 @@ module LLT
 
         sentence.strip!
         @logger.log("#{'Segmented '.green} #{sentences.size.to_s.cyan} #{sentence}")
-        sentences << LLT::Sentence.new(sentence)
+        sentences << Sentence.new(sentence)
       end
       sentences
     end
