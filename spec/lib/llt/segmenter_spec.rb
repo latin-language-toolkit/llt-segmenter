@@ -40,6 +40,20 @@ describe LLT::Segmenter do
       sentences.should have(1).item
     end
 
+    it "handles more dates" do
+      txt = "Is dies erat a. d. V Ian. Non. Feb. L. App. Pisone ."
+      sentences = segmenter.segment(txt)
+      puts sentences
+      sentences.should have(1).item
+    end
+
+    it "are only triggered when they have a leading word boundary" do
+      # spec might seem strange, but this didn't work from the start on
+      txt = "erat nauta. est."
+      sentences = segmenter.segment(txt)
+      sentences.should have(2).items
+    end
+
     it "handles dates even with numbers that have an abbr dot" do
       pending('Not solved yet. Think of M.') do
         txt = "Is dies erat a. d. V. Kal. Apr. L. Pisone, A. Gabinio consulibus."
@@ -67,6 +81,22 @@ describe LLT::Segmenter do
         sentences = segmenter.segment("Marcus est.\n")
         sentences.should have(1).item
         sentences.first.to_s.should == 'Marcus est.'
+      end
+
+      it "works with newline and space in between and no new line at the end" do
+        txt = "Fīlius rēgīnae erat.\n Rēgīnam aurō dōnābunt."
+        sentences = segmenter.segment(txt)
+        sentences.should have(2).items
+        sentences[0].to_s.should == "Fīlius rēgīnae erat."
+        sentences[1].to_s.should == "Rēgīnam aurō dōnābunt."
+      end
+
+      it "works with newline and space in between and new line at the end" do
+        txt = "Fīlius rēgīnae erat nauta.\n Rēgīnam aurō dōnābunt.\n"
+        sentences = segmenter.segment(txt)
+        sentences.should have(2).items
+        sentences[0].to_s.should == "Fīlius rēgīnae erat nauta."
+        sentences[1].to_s.should == "Rēgīnam aurō dōnābunt."
       end
     end
 

@@ -10,7 +10,9 @@ module LLT
 
     uses_logger { Logger.new('Segmenter', default: :debug) }
 
-    SENTENCE_CLOSER = /(?<!#{ALL_ABBRS_PIPED})\.(?!\.)|[;\?!:]|\n{2}/
+    # Abbreviations with boundary
+    AWB = ALL_ABBRS_PIPED.split('|').map { |abbr| "\\b#{abbr}" }.join('|')
+    SENTENCE_CLOSER = /(?<!#{AWB})\.(?!\.)|[;\?!:]|\n{2}/
     DIRECT_SPEECH_DELIMITER = /['"”]/
     TRAILERS = /\)/
 
