@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["latin.language.toolkit@gmail.com"]
   spec.description   = %q{Segments text into sentences}
   spec.summary       = %q{Segments text into sentences}
-  spec.homepage      = "latin-languge-toolkit.net"
+  spec.homepage      = "http://latin-language-toolkit.net"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)
@@ -18,6 +18,9 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
 
+  #spec.add_dependency "llt-core"
+  #spec.add_dependency "llt-constants"
+  #spec.add_dependency "llt-logger"
   spec.add_development_dependency "bundler", "~> 1.3"
   spec.add_development_dependency "rake"
   spec.add_development_dependency "rspec"
