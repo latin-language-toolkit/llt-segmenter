@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["latin.language.toolkit@gmail.com"]
   spec.description   = %q{Segments text into sentences}
   spec.summary       = %q{Segments text into sentences}
-  spec.homepage      = "latin-languge-toolkit.net"
+  spec.homepage      = "http://latin-language-toolkit.net"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)
