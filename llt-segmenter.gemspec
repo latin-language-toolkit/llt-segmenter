@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Gernot Höflechner, Robert Lichstensteiner, Christof Sirk"]
   spec.email         = ["latin.language.toolkit@gmail.com"]
   spec.description   = %q{Segments text into sentences}
-  spec.summary       = %q{TODO: Write a gem summary}
+  spec.summary       = %q{Segments text into sentences}
   spec.homepage      = "latin-languge-toolkit.net"
   spec.license       = "MIT"
 
