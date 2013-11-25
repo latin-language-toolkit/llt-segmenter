@@ -5,6 +5,6 @@ gemspec
 
 gem 'coveralls', require: false
 
-gem 'llt-core', path: '../llt-core'
-gem 'llt-constants', path: '../llt-constants'
-gem 'llt-logger', path: '../llt-logger'
+gem 'llt-core', git: 'git@github.com:latin-language-toolkit/llt-core.git'
+gem 'llt-constants', git: 'git@github.com:latin-language-toolkit/llt-constants.git'
+gem 'llt-logger', git: 'git@github.com:latin-language-toolkit/llt-logger.git'
