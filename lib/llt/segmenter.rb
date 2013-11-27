@@ -10,8 +10,13 @@ module LLT
 
     uses_logger { Logger.new('Segmenter', default: :debug) }
 
-    # Abbreviations with boundary
-    AWB = ALL_ABBRS_PIPED.split('|').map { |abbr| "\\b#{abbr}" }.join('|')
+    # Abbreviations with boundary e.g. \bA
+    #
+    # This doesn't work in jruby (opened an issue at jruby/jruby#1269 ),
+    # so we have to change things as long as this is not fixed.
+    #
+    # (?<=\s|^) can be just \b in MRI 2.0 and upwards
+    AWB = ALL_ABBRS_PIPED.split('|').map { |abbr| "(?<=\\s|^)#{abbr}" }.join('|')
     SENTENCE_CLOSER = /(?<!#{AWB})\.(?!\.)|[;\?!:]|\n{2}/
     DIRECT_SPEECH_DELIMITER = /['"”]/
     TRAILERS = /\)/
