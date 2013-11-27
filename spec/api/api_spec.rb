@@ -1,3 +1,4 @@
+require 'spec_helper'
 require_relative '../../api/api'
 require 'rack/test'
 set :environment, :test
