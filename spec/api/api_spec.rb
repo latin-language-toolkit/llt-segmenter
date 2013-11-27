@@ -10,14 +10,9 @@ def app
     Sinatra::Application
 end
 
-RSpec.configure do |config|
-  config.treat_symbols_as_metadata_keys_with_true_values = true
-  config.run_all_when_everything_filtered = true
-  config.filter_run :focus
-  config.include Rack::Test::Methods
-end
-
 describe "segmenter api" do
+  include Rack::Test::Methods
+
   describe '/segment' do
     context "with URI as input" do
       it "responds to GET" do
