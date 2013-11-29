@@ -1,13 +1,11 @@
+ENV['RACK_ENV'] = 'test'
+
 require 'spec_helper'
 require_relative '../../api/api'
 require 'rack/test'
-set :environment, :test
-set :run, false
-set :raise_errors, true
-set :logging, false
 
 def app
-    Sinatra::Application
+  Api
 end
 
 describe "segmenter api" do
@@ -27,7 +25,7 @@ describe "segmenter api" do
       context "with accept header json" do
         it "segments the given sentences" do
           get '/segment', text,
-           {"HTTP_ACCEPT" => "application/json"}
+            {"HTTP_ACCEPT" => "application/json"}
           last_response.should be_ok
           response = last_response.body
           parsed_response = JSON.parse(response)
