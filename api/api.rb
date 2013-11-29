@@ -1,6 +1,6 @@
 require 'sinatra/base'
 require 'cgi'
-require_relative '../lib/llt/segmenter'
+require 'llt/segmenter'
 
 class Api < Sinatra::Base
   get '/segment' do
