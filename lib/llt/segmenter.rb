@@ -19,7 +19,7 @@ module LLT
     AWB = ALL_ABBRS_PIPED.split('|').map { |abbr| "(?<=\\s|^)#{abbr}" }.join('|')
     SENTENCE_CLOSER = /(?<!#{AWB})\.(?!\.)|[;\?!:]|\n{2}/
     DIRECT_SPEECH_DELIMITER = /['"”]/
-    TRAILERS = /\)/
+    TRAILERS = /\)|<\/.*?>/
 
     def segment(string, add_to: nil)
       # dump whitespace at the beginning and end!
@@ -39,7 +39,7 @@ module LLT
 
         sentence.strip!
         @logger.log("#{'Segmented '.green} #{sentences.size.to_s.cyan} #{sentence}")
-        sentences << Sentence.new(sentence)
+        sentences << Sentence.new(sentence) unless sentence.empty?
       end
       sentences
     end
