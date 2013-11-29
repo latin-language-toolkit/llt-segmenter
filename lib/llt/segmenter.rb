@@ -10,6 +10,10 @@ module LLT
 
     uses_logger { Logger.new('Segmenter', default: :debug) }
 
+    def self.default_options
+      { indexing: true }
+    end
+
     # Abbreviations with boundary e.g. \bA
     #
     # This doesn't work in jruby (opened an issue at jruby/jruby#1269 ),
@@ -21,8 +25,10 @@ module LLT
     DIRECT_SPEECH_DELIMITER = /['"”]/
     TRAILERS = /\)|<\/.*?>/
 
-    def segment(string, add_to: nil)
+    def segment(string, add_to: nil, **options)
       # dump whitespace at the beginning and end!
+      @indexing = parse_option(:indexing, options)
+      @id = 0 if @indexing
       string.strip!
       sentences = scan_through_string(StringScanner.new(string))
       add_to << sentences if add_to.respond_to?(:<<)
@@ -39,9 +45,15 @@ module LLT
 
         sentence.strip!
         @logger.log("#{'Segmented '.green} #{sentences.size.to_s.cyan} #{sentence}")
-        sentences << Sentence.new(sentence) unless sentence.empty?
+        sentences << Sentence.new(sentence, id) unless sentence.empty?
       end
       sentences
+    end
+
+    def id
+      if @indexing
+        @id += 1
+      end
     end
 
     def handle_broken_off_texts_or_raise(sentences, scanner)

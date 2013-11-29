@@ -26,6 +26,18 @@ describe LLT::Segmenter do
       sentences[2].to_s.should == "Marcus Antonius!"
     end
 
+    it "creates indices by default" do
+      txt = "Cicero est; quis Caesar est? Marcus Antonius!"
+      sentences = segmenter.segment(txt)
+      sentences.map(&:id).should == [1, 2, 3]
+    end
+
+    it "indices can be turned off" do
+      txt = "Cicero est; quis Caesar est? Marcus Antonius!"
+      sentences = segmenter.segment(txt, indexing: false)
+      sentences.map(&:id).should == [nil, nil, nil]
+    end
+
     it "handles abbreviated names" do
       txt = "C. Caesar est. M. Tullius Cicero est."
       sentences = segmenter.segment(txt)
