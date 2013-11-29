@@ -68,6 +68,12 @@ describe LLT::Segmenter do
       sentences.should have(2).items
     end
 
+    it "doesn't create empty sentences" do
+      txt = "text.\n\n\ntext."
+      sentences = segmenter.segment(txt)
+      sentences.should have(2).items
+    end
+
     context "with embedded xml" do
       it "doesn't break up before xml closing tags" do
         txt = '<grc> text.</grc>'

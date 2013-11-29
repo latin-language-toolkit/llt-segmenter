@@ -39,7 +39,7 @@ module LLT
 
         sentence.strip!
         @logger.log("#{'Segmented '.green} #{sentences.size.to_s.cyan} #{sentence}")
-        sentences << Sentence.new(sentence)
+        sentences << Sentence.new(sentence) unless sentence.empty?
       end
       sentences
     end
