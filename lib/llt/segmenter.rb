@@ -45,8 +45,9 @@ module LLT
 
         sentence.strip!
         unless sentence.empty?
-          @logger.log("Segmented #{id} #{sentence}")
-          sentences << Sentence.new(sentence, id)
+          curr_id = id
+          @logger.log("Segmented #{curr_id} #{sentence}")
+          sentences << Sentence.new(sentence, curr_id)
         end
       end
       sentences
