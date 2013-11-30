@@ -44,8 +44,10 @@ module LLT
         sentence << trailing_delimiters(scanner)
 
         sentence.strip!
-        @logger.log("#{'Segmented '.green} #{sentences.size.to_s.cyan} #{sentence}")
-        sentences << Sentence.new(sentence, id) unless sentence.empty?
+        unless sentence.empty?
+          @logger.log("Segmented #{id} #{sentence}")
+          sentences << Sentence.new(sentence, id)
+        end
       end
       sentences
     end
