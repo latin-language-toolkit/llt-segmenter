@@ -94,7 +94,7 @@ describe LLT::Segmenter do
       end
     end
 
-    context "new line (\\n) handling" do
+    context "newline (\\n) handling" do
       it "works when in between" do
         txt = "Filia est.\nFilius est."
         sentences = segmenter.segment(txt)
@@ -123,6 +123,21 @@ describe LLT::Segmenter do
         sentences.should have(2).items
         sentences[0].to_s.should == "Fīlius rēgīnae erat nauta."
         sentences[1].to_s.should == "Rēgīnam aurō dōnābunt."
+      end
+
+      it "treats an empty line as delimiter - might e.g. appear in book titles" do
+        txt = "Marcus est\n\nMarcus est."
+        sentences = segmenter.segment(txt)
+        sentences.should have(2).item
+      end
+
+      it "number of newlines that count as sentence boundary can be given as option" do
+        txt1 = "Marcus est\n\nMarcus est."
+        txt2 = "Marcus est\n\n\nMarcus est."
+        sentences1 = segmenter.segment(txt1, newline_boundary: 3)
+        sentences2 = segmenter.segment(txt2, newline_boundary: 3)
+        sentences1.should have(1).item
+        sentences2.should have(2).item
       end
     end
 
@@ -201,12 +216,6 @@ describe LLT::Segmenter do
       sentences[0].to_s.should == 'Marcus est.'
       sentences[1].to_s.should == '(Marcus est.)'
       sentences[2].to_s.should == 'Marcus est.'
-    end
-
-    it "treats an empty line as delimiter - might e.g. appear in book titles" do
-      txt = "Marcus est\n\nMarcus est."
-      sentences = segmenter.segment(txt)
-      sentences.should have(2).item
     end
 
     it "handles broken off texts - the rest is an own sentence" do

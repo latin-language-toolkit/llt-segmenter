@@ -11,7 +11,10 @@ module LLT
     uses_logger { Logger.new('Segmenter', default: :debug) }
 
     def self.default_options
-      { indexing: true }
+      {
+        indexing: true,
+        newline_boundary: 2
+      }
     end
 
     # Abbreviations with boundary e.g. \bA
@@ -21,14 +24,13 @@ module LLT
     #
     # (?<=\s|^) can be just \b in MRI 2.0 and upwards
     AWB = ALL_ABBRS_PIPED.split('|').map { |abbr| "(?<=\\s|^)#{abbr}" }.join('|')
-    SENTENCE_CLOSER = /(?<!#{AWB})\.(?!\.)|[;\?!:]|\n{2}/
+    SENTENCE_CLOSER = /(?<!#{AWB})\.(?!\.)|[;\?!:]/
     DIRECT_SPEECH_DELIMITER = /['"”]/
     TRAILERS = /\)|<\/.*?>/
 
     def segment(string, add_to: nil, **options)
+      setup(options)
       # dump whitespace at the beginning and end!
-      @indexing = parse_option(:indexing, options)
-      @id = 0 if @indexing
       string.strip!
       sentences = scan_through_string(StringScanner.new(string))
       add_to << sentences if add_to.respond_to?(:<<)
@@ -37,9 +39,17 @@ module LLT
 
     private
 
+    def setup(options)
+      @indexing = parse_option(:indexing, options)
+      @id = 0 if @indexing
+
+      nl_boundary  = parse_option(:newline_boundary, options)
+      @sentence_closer = Regexp.union(SENTENCE_CLOSER, /\n{#{nl_boundary}}/)
+    end
+
     def scan_through_string(scanner, sentences = [])
       while scanner.rest?
-        sentence = scanner.scan_until(SENTENCE_CLOSER) ||
+        sentence = scanner.scan_until(@sentence_closer) ||
           handle_broken_off_texts_or_raise(sentences, scanner)
         sentence << trailing_delimiters(scanner)
 
