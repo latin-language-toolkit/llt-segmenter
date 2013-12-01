@@ -8,7 +8,7 @@ class Api < Sinatra::Base
   helpers LLT::Core::Api::Helpers
 
   get '/segment' do
-    text = params[:text].to_s
+    text = extract_text(params)
     segmenter = LLT::Segmenter.new(params)
     sentences = segmenter.segment(text)
 
