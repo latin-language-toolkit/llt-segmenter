@@ -1,23 +1,35 @@
 require 'sinatra/base'
-require 'cgi'
+require 'sinatra/respond_with'
 require 'llt/segmenter'
 
 class Api < Sinatra::Base
+  register Sinatra::RespondWith
+
   get '/segment' do
-    # handle invalid texts
-    text = CGI.unescape(params['text'].to_s)
+    text = h(params[:text])
     segmenter = LLT::Segmenter.new
-    sentences = segmenter.segment(text).map(&:to_s)
-    if request.env["HTTP_ACCEPT"] =~ /json/i
-      "[\"#{sentences.join('", "')}\"]"
-    else
-      to_xml(sentences, 's')
+    sentences = segmenter.segment(text)
+
+    respond_to do |f|
+      f.xml { to_xml(sentences, params) }
     end
   end
 
-  def to_xml(elements, tag)
-    open = "<#{tag}>"
-    close = "</#{tag}>"
-    "#{open}#{elements.join(close + open)}#{close}"
+  def to_xml(elements, params = {})
+    elements.each_with_object('') do |e, str|
+      str << e.to_xml(*markup_params(params))
+    end
   end
+
+  module HtmlEscaper
+    def h(text)
+      Rack::Utils.escape_html(text)
+    end
+
+    def markup_params(params)
+      []
+    end
+  end
+
+  helpers HtmlEscaper
 end
