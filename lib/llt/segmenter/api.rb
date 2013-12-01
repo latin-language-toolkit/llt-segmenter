@@ -9,7 +9,7 @@ class Api < Sinatra::Base
 
   get '/segment' do
     text = params[:text].to_s
-    segmenter = LLT::Segmenter.new
+    segmenter = LLT::Segmenter.new(params)
     sentences = segmenter.segment(text)
 
     respond_to do |f|
