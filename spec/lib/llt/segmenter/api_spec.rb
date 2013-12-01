@@ -1,7 +1,7 @@
 ENV['RACK_ENV'] = 'test'
 
 require 'spec_helper'
-require_relative '../../api/api'
+require 'llt/segmenter/api'
 require 'rack/test'
 
 def app

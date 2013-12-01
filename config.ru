@@ -1,4 +1,2 @@
-$LOAD_PATH.unshift 'api'
-
-require 'api'
+require 'llt/segmenter/api'
 run Api
