@@ -36,19 +36,19 @@ describe "segmenter api" do
             {"HTTP_ACCEPT" => "application/xml"}
           last_response.should be_ok
           body = last_response.body
-          body.should =~ /<s>homo mittit\.<\/s>/
-          body.should =~ /<s>Marcus est\.<\/s>/
+          body.should =~ /<s n="1">homo mittit\.<\/s>/
+          body.should =~ /<s n="2">Marcus est\.<\/s>/
         end
 
         it "receives params for segmentation and markup" do
-          params = { indexing: true }.merge(text)
+          params = { indexing: false }.merge(text)
 
           get '/segment', params,
             {"HTTP_ACCEPT" => "application/xml"}
           last_response.should be_ok
           body = last_response.body
-          body.should =~ /<s n="1">homo mittit\.<\/s>/
-          body.should =~ /<s n="2">Marcus est\.<\/s>/
+          body.should =~ /<s>homo mittit\.<\/s>/
+          body.should =~ /<s>Marcus est\.<\/s>/
         end
       end
     end
