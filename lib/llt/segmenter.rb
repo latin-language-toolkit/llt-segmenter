@@ -50,7 +50,7 @@ module LLT
     def scan_through_string(scanner, sentences = [])
       while scanner.rest?
         sentence = scanner.scan_until(@sentence_closer) ||
-          handle_broken_off_texts_or_raise(sentences, scanner)
+          rescue_no_delimiters(sentences, scanner)
         sentence << trailing_delimiters(scanner)
 
         sentence.strip!
@@ -69,12 +69,21 @@ module LLT
       end
     end
 
-    def handle_broken_off_texts_or_raise(sentences, scanner)
+    def rescue_no_delimiters(sentences, scanner)
       if sentences.any?
         # broken off texts
         scanner.scan_until(/$/)
       else
-        raise ArgumentError.new('No delimiters present!')
+        # try a simple newline as delimiter, if there was no delimiter
+        scanner.reset
+        @sentence_closer = /\n/
+        if sent = scanner.scan_until(@sentence_closer)
+          sent
+        else
+          # when there is not even a new line, return all input
+          scanner.terminate
+          scanner.string
+        end
       end
     end
 
