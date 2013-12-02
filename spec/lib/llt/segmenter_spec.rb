@@ -224,9 +224,16 @@ describe LLT::Segmenter do
       sentences.should have(2).item
     end
 
-    it "raises an argument error when there is no delimiter whatsoever" do
-      txt = "Marcus est\nMarcus est"
-      expect { segmenter.segment(txt) }.to raise_error ArgumentError
+    context "with no delimiters present" do
+      it "tries to fallback to single newline boundary" do
+        txt = "Marcus est\nMarcus est"
+        segmenter.segment(txt).should have(2).items
+      end
+
+      it "returns the whole input as segment when there are no newlines" do
+        txt = "Marcus est"
+        segmenter.segment(txt).should have(1).item
+      end
     end
 
     describe "takes an optional keyword argument add_to" do
