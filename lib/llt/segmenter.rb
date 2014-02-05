@@ -25,8 +25,10 @@ module LLT
     #
     # (?<=\s|^) can be just \b in MRI 2.0 and upwards
     AWB = ALL_ABBRS_PIPED.split('|').map { |abbr| "(?<=\\s|^)#{abbr}" }.join('|')
-    SENTENCE_CLOSER = /(?<!#{AWB})\.(?!\.)|[;\?!:]/
-    DIRECT_SPEECH_DELIMITER = /['"”]/
+    # the xml escaped characters cannot be refactored to something along
+    # &(?:amp|quot); - it's an invalid pattern in the look-behind
+    SENTENCE_CLOSER = /(?<!#{AWB})\.(?!\.)|[\?!:]|((?<!&amp|&quot|&apos|&lt|&gt);)/
+    DIRECT_SPEECH_DELIMITER = /['"”]|&(?:apos|quot);/
     TRAILERS = /\)|<\/.*?>/
 
     def segment(string, add_to: nil, **options)

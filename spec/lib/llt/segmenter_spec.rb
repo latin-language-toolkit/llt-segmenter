@@ -123,6 +123,29 @@ describe LLT::Segmenter do
       end
     end
 
+    context "with xml escaped characters" do
+      it "doesn't split when it shouldn't" do
+        txt = '&quot;text&quot; resumed. success.'
+        sentences = segmenter.segment(txt)
+        sentences.should have(2).item
+        sentences[1].to_s.should == 'success.'
+      end
+
+      it "acknowledges &quot; as potentially trailing delimiter" do
+        txt = '&quot;text.&quot; success.'
+        sentences = segmenter.segment(txt)
+        sentences.should have(2).item
+        sentences[1].to_s.should == 'success.'
+      end
+
+      it "acknowledges &apos; as potentially trailing delimiter" do
+        txt = '&apos;text.&apos; success.'
+        sentences = segmenter.segment(txt)
+        sentences.should have(2).item
+        sentences[1].to_s.should == 'success.'
+      end
+    end
+
     context "newline (\\n) handling" do
       it "works when in between" do
         txt = "Filia est.\nFilius est."
