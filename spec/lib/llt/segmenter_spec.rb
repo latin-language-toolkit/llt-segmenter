@@ -89,8 +89,60 @@ describe LLT::Segmenter do
     context "with embedded xml" do
       it "doesn't break up before xml closing tags" do
         txt = '<grc> text.</grc>'
-        sentences = segmenter.segment(txt)
+        sentences = segmenter.segment(txt, xml: true)
         sentences.should have(1).item
+      end
+
+      it "doesn't break with punctuation in element names I" do
+        txt = '<grc.test>text.</grc.test>'
+        sentences = segmenter.segment(txt, xml: true)
+        sentences.should have(1).item
+      end
+
+      it "doesn't break with punctuation in element names II" do
+        txt = '<grc.test>text.</grc.test> text 2.'
+        sentences = segmenter.segment(txt, xml: true)
+        sentences.should have(2).items
+        sentences[0].to_s.should == '<grc.test>text.</grc.test>'
+        sentences[1].to_s.should == 'text 2.'
+      end
+
+      it "doesn't break with punctuation in element names III" do
+        txt = '<grc.test>text</grc.test> resumed. text 2.'
+        sentences = segmenter.segment(txt, xml: true)
+        sentences.should have(2).items
+        sentences[0].to_s.should == '<grc.test>text</grc.test> resumed.'
+        sentences[1].to_s.should == 'text 2.'
+      end
+
+      it "doesn't break with attribute values containing punctuation" do
+        txt = '<grc no="1.1"> text.</grc> text 2.'
+        sentences = segmenter.segment(txt, xml: true)
+        sentences.should have(2).items
+        sentences[1].to_s.should == 'text 2.'
+      end
+    end
+
+    context "with xml escaped characters" do
+      it "doesn't split when it shouldn't" do
+        txt = '&quot;text&quot; resumed. success.'
+        sentences = segmenter.segment(txt)
+        sentences.should have(2).item
+        sentences[1].to_s.should == 'success.'
+      end
+
+      it "acknowledges &quot; as potentially trailing delimiter" do
+        txt = '&quot;text.&quot; success.'
+        sentences = segmenter.segment(txt)
+        sentences.should have(2).item
+        sentences[1].to_s.should == 'success.'
+      end
+
+      it "acknowledges &apos; as potentially trailing delimiter" do
+        txt = '&apos;text.&apos; success.'
+        sentences = segmenter.segment(txt)
+        sentences.should have(2).item
+        sentences[1].to_s.should == 'success.'
       end
     end
 

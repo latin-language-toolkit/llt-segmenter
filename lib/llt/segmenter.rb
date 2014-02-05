@@ -13,7 +13,8 @@ module LLT
     def self.default_options
       {
         indexing: true,
-        newline_boundary: 2
+        newline_boundary: 2,
+        xml: false
       }
     end
 
@@ -24,8 +25,10 @@ module LLT
     #
     # (?<=\s|^) can be just \b in MRI 2.0 and upwards
     AWB = ALL_ABBRS_PIPED.split('|').map { |abbr| "(?<=\\s|^)#{abbr}" }.join('|')
-    SENTENCE_CLOSER = /(?<!#{AWB})\.(?!\.)|[;\?!:]/
-    DIRECT_SPEECH_DELIMITER = /['"”]/
+    # the xml escaped characters cannot be refactored to something along
+    # &(?:amp|quot); - it's an invalid pattern in the look-behind
+    SENTENCE_CLOSER = /(?<!#{AWB})\.(?!\.)|[\?!:]|((?<!&amp|&quot|&apos|&lt|&gt);)/
+    DIRECT_SPEECH_DELIMITER = /['"”]|&(?:apos|quot);/
     TRAILERS = /\)|<\/.*?>/
 
     def segment(string, add_to: nil, **options)
@@ -40,6 +43,7 @@ module LLT
     private
 
     def setup(options)
+      @xml = parse_option(:xml, options)
       @indexing = parse_option(:indexing, options)
       @id = 0 if @indexing
 
@@ -49,8 +53,9 @@ module LLT
 
     def scan_through_string(scanner, sentences = [])
       while scanner.rest?
-        sentence = scanner.scan_until(@sentence_closer) ||
-          rescue_no_delimiters(sentences, scanner)
+        sentence = scan_until_next_sentence(scanner, sentences)
+
+        rebuild_xml_tags(scanner, sentence, sentences) if @xml
         sentence << trailing_delimiters(scanner)
 
         sentence.strip!
@@ -63,10 +68,34 @@ module LLT
       sentences
     end
 
+    def scan_until_next_sentence(scanner, sentences)
+      scanner.scan_until(@sentence_closer) ||
+        rescue_no_delimiters(sentences, scanner)
+    end
+
     def id
       if @indexing
         @id += 1
       end
+    end
+
+    # this is only needed when there is punctuation inside of xml tags
+    def rebuild_xml_tags(scanner, sentence, sentences)
+      if has_open_chevron?(sentence)
+        sentence << scanner.scan_until(/>/)
+        if inside_a_running_sentence?(sentence)
+          sentence << scan_until_next_sentence(scanner, sentences)
+        end
+        rebuild_xml_tags(scanner, sentence, sentences)
+      end
+    end
+
+    def has_open_chevron?(sentence)
+      sentence.count('<') > sentence.count('>')
+    end
+
+    def inside_a_running_sentence?(sentence)
+      ! sentence.match(/#{@sentence_closer}\s*<.*?>$/)
     end
 
     def rescue_no_delimiters(sentences, scanner)
