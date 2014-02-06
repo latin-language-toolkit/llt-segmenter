@@ -121,6 +121,12 @@ describe LLT::Segmenter do
         sentences.should have(2).items
         sentences[1].to_s.should == 'text 2.'
       end
+
+      it "doesn't break when a random newline leads the last tag" do
+        txt = "<grc> text.\n</grc>"
+        sentences = segmenter.segment(txt, xml: true)
+        sentences.should have(1).item
+      end
     end
 
     context "with xml escaped characters" do
