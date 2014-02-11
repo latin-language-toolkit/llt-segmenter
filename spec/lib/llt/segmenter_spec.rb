@@ -74,6 +74,12 @@ describe LLT::Segmenter do
       end
     end
 
+    it "handles abbreviation of Marcus (M.) at the beginning of a new paragraph" do
+      txt = "<p>qui facere poterat.</p>\n<p>\n<milestone/>\nM. Cicero inter Catilinas detestatur!"
+      sentences = segmenter.segment(txt, xml: true)
+      sentences.should have(2).items
+    end
+
     it "splits at :" do
       txt = 'iubent: fugere manus.'
       sentences = segmenter.segment(txt)
