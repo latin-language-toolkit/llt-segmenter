@@ -307,6 +307,18 @@ describe LLT::Segmenter do
       end
     end
 
+    context "with badly whitespaced direct speech delimiters" do
+      it "normalizes whitespace and knows to which sentence a \" belongs" do
+        txt = '"Marcus est. " Cicero est. " Iulius est. "'
+        sentences = segmenter.segment(txt)
+        #sentences.should have(3).items
+        sentences.map!(&:to_s)
+        sentences[0].should == '"Marcus est."'
+        sentences[1].should == 'Cicero est.'
+        sentences[2].should == '"Iulius est."'
+      end
+    end
+
     describe "takes an optional keyword argument add_to" do
       class ParagraphDummy
         attr_reader :sentences
