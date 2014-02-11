@@ -70,18 +70,7 @@ module LLT
       new_string = ''
       until scanner.eos?
         if match = scanner.scan_until(/"/)
-          if surrounded_by_whitespace?(scanner)
-            if direct_speech_open?
-              # eliminate the whitespace in front of "
-              new_string << match[0..-3] << '"'
-            else
-              new_string << match
-              # hop over the whitespace behind "
-              scanner.pos = scanner.pos + 1
-            end
-          else
-            new_string << match
-          end
+          new_string << normalized_match(scanner, match)
           toggle_direct_speech_status
         else
           new_string << scanner.rest
@@ -95,6 +84,21 @@ module LLT
       pos_before = scanner.pre_match[-1]
       pos_behind = scanner.post_match[0]
       pos_before == ' ' && (pos_behind == ' ' || pos_behind == nil) # end of string
+    end
+
+    def normalized_match(scanner, match)
+      if surrounded_by_whitespace?(scanner)
+        if direct_speech_open?
+          # eliminate the whitespace in front of "
+          match[0..-3] << '"'
+        else
+          # hop over the whitespace behind "
+          scanner.pos = scanner.pos + 1
+          match
+        end
+      else
+        match
+      end
     end
 
     def direct_speech_open?
