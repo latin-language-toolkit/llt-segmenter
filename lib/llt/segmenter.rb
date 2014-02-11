@@ -59,33 +59,42 @@ module LLT
     # delimiters like " (currently the only one supported).
     def normalize_whitespace(string)
       # in most cases there is nothing to do, then leave immediately
-      if string.match(/\s"\s/)
-        new_string = ''
-        scanner = StringScanner.new(string)
-        reset_direct_speech_status
+      return string unless string.match(/\s"\s/)
 
-        until scanner.eos?
-          if match = scanner.scan_until(/"/)
-            if match[-2] == ' ' && (scanner.post_match[0] == ' ' || scanner.post_match[0] == nil)
-              if direct_speech_open?
-                new_string << match[0..-3] << '"'
-              else
-                new_string << match
-                scanner.pos = scanner.pos + 1
-              end
+      scanner = StringScanner.new(string)
+      reset_direct_speech_status
+      string_with_normalized_whitespace(scanner)
+    end
+
+    def string_with_normalized_whitespace(scanner)
+      new_string = ''
+      until scanner.eos?
+        if match = scanner.scan_until(/"/)
+          if surrounded_by_whitespace?(scanner)
+            if direct_speech_open?
+              # eliminate the whitespace in front of "
+              new_string << match[0..-3] << '"'
             else
               new_string << match
+              # hop over the whitespace behind "
+              scanner.pos = scanner.pos + 1
             end
-            toggle_direct_speech_status
           else
-            new_string << scanner.rest
-            break
+            new_string << match
           end
+          toggle_direct_speech_status
+        else
+          new_string << scanner.rest
+          break
         end
-        new_string
-      else
-        string
       end
+      new_string
+    end
+
+    def surrounded_by_whitespace?(scanner)
+      pos_before = scanner.pre_match[-1]
+      pos_behind = scanner.post_match[0]
+      pos_before == ' ' && (pos_behind == ' ' || pos_behind == nil) # end of string
     end
 
     def direct_speech_open?
