@@ -74,12 +74,6 @@ describe LLT::Segmenter do
       end
     end
 
-    it "handles abbreviation of Marcus (M.) at the beginning of a new paragraph" do
-      txt = "<p>qui facere poterat.</p>\n<p>\n<milestone/>\nM. Cicero inter Catilinas detestatur!"
-      sentences = segmenter.segment(txt, xml: true)
-      sentences.should have(2).items
-    end
-
     it "splits at :" do
       txt = 'iubent: fugere manus.'
       sentences = segmenter.segment(txt)
@@ -130,6 +124,19 @@ describe LLT::Segmenter do
 
       it "doesn't break when a random newline leads the last tag" do
         txt = "<grc> text.\n</grc>"
+        sentences = segmenter.segment(txt, xml: true)
+        sentences.should have(1).item
+      end
+
+      it "handles abbreviation of Marcus (M.) at the beginning of a new paragraph" do
+        txt = "<p>qui facere poterat.</p>\n<p>\n<milestone/>\nM. Cicero inter Catilinas detestatur!"
+        sentences = segmenter.segment(txt, xml: true)
+        sentences.should have(2).items
+      end
+
+      it "treats an xml tag like a word boundary" do
+        # M. would not be recognized as abbreviation otherwise
+        txt = "<p>M. Cicero est.</p>"
         sentences = segmenter.segment(txt, xml: true)
         sentences.should have(1).item
       end

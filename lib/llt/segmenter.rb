@@ -24,7 +24,10 @@ module LLT
     # so we have to change things as long as this is not fixed.
     #
     # (?<=\s|^) can be just \b in MRI 2.0 and upwards
-    AWB = ALL_ABBRS_PIPED.split('|').map { |abbr| "(?<=\\s|^)#{abbr}" }.join('|')
+    #
+    # Added > to the regex on Feb 11 2014 to treat a closing chevron as a kind
+    # of word boundary.
+    AWB = ALL_ABBRS_PIPED.split('|').map { |abbr| "(?<=\\s|^|>)#{abbr}" }.join('|')
     # the xml escaped characters cannot be refactored to something along
     # &(?:amp|quot); - it's an invalid pattern in the look-behind
     SENTENCE_CLOSER = /(?<!#{AWB})\.(?!\.)|[\?!:]|((?<!&amp|&quot|&apos|&lt|&gt);)/
