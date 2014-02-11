@@ -38,6 +38,7 @@ module LLT
       setup(options)
       # dump whitespace at the beginning and end!
       string.strip!
+      string = normalize_whitespace(string)
       sentences = scan_through_string(StringScanner.new(string))
       add_to << sentences if add_to.respond_to?(:<<)
       sentences
@@ -52,6 +53,51 @@ module LLT
 
       nl_boundary  = parse_option(:newline_boundary, options)
       @sentence_closer = Regexp.union(SENTENCE_CLOSER, /\n{#{nl_boundary}}/)
+    end
+
+    # Used to normalized wonky whitespace in front of or behind direct speech
+    # delimiters like " (currently the only one supported).
+    def normalize_whitespace(string)
+      # in most cases there is nothing to do, then leave immediately
+      if string.match(/\s"\s/)
+        new_string = ''
+        scanner = StringScanner.new(string)
+        reset_direct_speech_status
+
+        until scanner.eos?
+          if match = scanner.scan_until(/"/)
+            if match[-2] == ' ' && (scanner.post_match[0] == ' ' || scanner.post_match[0] == nil)
+              if direct_speech_open?
+                new_string << match[0..-3] << '"'
+              else
+                new_string << match
+                scanner.pos = scanner.pos + 1
+              end
+            else
+              new_string << match
+            end
+            toggle_direct_speech_status
+          else
+            new_string << scanner.rest
+            break
+          end
+        end
+        new_string
+      else
+        string
+      end
+    end
+
+    def direct_speech_open?
+      @direct_speech
+    end
+
+    def reset_direct_speech_status
+      @direct_speech = false
+    end
+
+    def toggle_direct_speech_status
+      @direct_speech = (@direct_speech ? false : true)
     end
 
     def scan_through_string(scanner, sentences = [])
