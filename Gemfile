@@ -6,9 +6,9 @@ gem 'pry'
 
 gem 'coveralls', require: false
 
-gem 'llt-core', git: 'https://github.com/latin-language-toolkit/llt-core.git'
-gem 'llt-constants', git: 'https://github.com/latin-language-toolkit/llt-constants.git'
-gem 'llt-logger', git: 'https://github.com/latin-language-toolkit/llt-logger.git'
+gem 'llt-core', git: 'git://github.com/latin-language-toolkit/llt-core.git'
+gem 'llt-constants', git: 'git://github.com/latin-language-toolkit/llt-constants.git'
+gem 'llt-logger', git: 'git://github.com/latin-language-toolkit/llt-logger.git'
 
 platform :jruby do
   gem 'jruby-httpclient'
