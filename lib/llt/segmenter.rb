@@ -117,7 +117,10 @@ module LLT
       while scanner.rest?
         sentence = scan_until_next_sentence(scanner, sentences)
 
-        rebuild_xml_tags(scanner, sentence, sentences) if @xml
+        if @xml
+          rebuild_xml_tags(scanner, sentence, sentences)
+          take_all_closing_tags(scanner, sentence)
+        end
         sentence << trailing_delimiters(scanner)
 
         sentence.strip!
@@ -159,6 +162,18 @@ module LLT
     def inside_a_running_sentence?(sentence)
       ! sentence.match(/#{@sentence_closer}\s*<.*?>$/)
     end
+
+    def take_all_closing_tags(scanner, sentence)
+      if closing_tags_only?(scanner.rest)
+        sentence << scanner.rest
+        scanner.terminate
+      end
+    end
+
+    def closing_tags_only?(str)
+      str.match(/(\s*<.*?\/.*?>\s*)+\z/)
+    end
+
 
     def rescue_no_delimiters(sentences, scanner)
       if sentences.any?

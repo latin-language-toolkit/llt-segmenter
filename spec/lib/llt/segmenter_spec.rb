@@ -102,6 +102,7 @@ describe LLT::Segmenter do
       it "doesn't break with punctuation in element names II" do
         txt = '<grc.test>text.</grc.test> text 2.'
         sentences = segmenter.segment(txt, xml: true)
+        puts sentences
         sentences.should have(2).items
         sentences[0].to_s.should == '<grc.test>text.</grc.test>'
         sentences[1].to_s.should == 'text 2.'
@@ -137,6 +138,19 @@ describe LLT::Segmenter do
       it "treats an xml tag like a word boundary" do
         # M. would not be recognized as abbreviation otherwise
         txt = "<p>M. Cicero est.</p>"
+        sentences = segmenter.segment(txt, xml: true)
+        sentences.should have(1).item
+      end
+
+      it "doesn't fall with multiple closing tags at the end" do
+        txt = '<div type="div1" xml:id="c097"> <l>Numen inest vati, vatum mens consona caelo est, </l> <l n="100">Nec certus scit fallere Apollo. </l>  </div>'
+        sentences = segmenter.segment(txt, xml: true)
+        puts sentences
+        sentences.should have(1).item
+      end
+
+      it "doesn't fall with empty tags" do
+        txt = '<div type="div1" xml:id="c097"> <l>Numen inest vati, vatum mens consona caelo est, </l> <l n="100">Nec certus scit fallere Apollo. </l> <milestone unit="page" n="210"/> </div>'
         sentences = segmenter.segment(txt, xml: true)
         sentences.should have(1).item
       end
