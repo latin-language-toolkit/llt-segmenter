@@ -171,7 +171,7 @@ module LLT
     end
 
     def closing_tags_only?(str)
-      str.match(/(\s*<.*?\/.*?>\s*)+\z/)
+      str.match(/\a(\s*<.*?\/.*?>\s*)+\z/)
     end
 
 
