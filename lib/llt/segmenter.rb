@@ -31,7 +31,7 @@ module LLT
     # the xml escaped characters cannot be refactored to something along
     # &(?:amp|quot); - it's an invalid pattern in the look-behind
     SENTENCE_CLOSER = /(?<!#{AWB})\.(?!\.)|[\?!:]|((?<!&amp|&quot|&apos|&lt|&gt);)/
-    DIRECT_SPEECH_DELIMITER = /['"”]|&(?:apos|quot);/
+    DIRECT_SPEECH_DELIMITER = /['"]|&(?:apos|quot);/ # the bracketed part had ” before too - which throws an error - look into that
     TRAILERS = /\)|\s*<\/.*?>/
 
     def segment(string, add_to: nil, **options)
