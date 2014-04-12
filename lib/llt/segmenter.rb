@@ -170,8 +170,9 @@ module LLT
       end
     end
 
+    # this will not match self contained nodes like <note/>
     def closing_tags_only?(str)
-      str.match(/\A(\s*<.*?\/.*?>\s*)+\z/)
+      str.match(/\A(\s*<\/.*?>\s*)+\z/)
     end
 
 
