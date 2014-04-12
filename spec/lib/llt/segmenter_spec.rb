@@ -1,6 +1,10 @@
 require 'spec_helper'
 
 describe LLT::Segmenter do
+  def load_fixture(filename)
+    File.read(File.expand_path("../../../fixtures/#{filename}", __FILE__))
+  end
+
   let(:segmenter) { LLT::Segmenter.new }
   describe "#segment" do
     it "returns an array of LLT::Sentence elements" do
@@ -330,6 +334,36 @@ describe LLT::Segmenter do
         sentences[0].should == '"Marcus est."'
         sentences[1].should == 'Cicero est.'
         sentences[2].should == '"Iulius est."'
+      end
+    end
+
+    context "with full TEI files" do
+      it "doesn't go into an endless loop when something is wrong" do
+        txt = load_fixture('petrov_eleg01_with_endless_loop.xml')
+        sentences = segmenter.segment(txt, xml: true)
+        sentences.should_not be_empty
+        sentences.should have(60).items
+      end
+
+      it "example II" do
+        txt = load_fixture('petrov_eleg01_with_endless_loop_no_xml_header.xml')
+        sentences = segmenter.segment(txt, xml: true)
+        sentences.should_not be_empty
+        sentences.should have(60).items
+      end
+
+      it "example III" do
+        txt = load_fixture('petrov_eleg01_cleaned.xml')
+        sentences = segmenter.segment(txt, xml: true)
+        sentences.should_not be_empty
+        sentences.should have(60).items
+      end
+
+      it "example IV" do
+        txt = load_fixture('petrov_eleg02_with_internal_error.xml')
+        sentences = segmenter.segment(txt, xml: true)
+        sentences.should_not be_empty
+        sentences.should have(74).items
       end
     end
 

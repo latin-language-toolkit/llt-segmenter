@@ -31,7 +31,7 @@ module LLT
     # the xml escaped characters cannot be refactored to something along
     # &(?:amp|quot); - it's an invalid pattern in the look-behind
     SENTENCE_CLOSER = /(?<!#{AWB})\.(?!\.)|[\?!:]|((?<!&amp|&quot|&apos|&lt|&gt);)/
-    DIRECT_SPEECH_DELIMITER = /['"]|&(?:apos|quot);/ # the bracketed part had ” before too - which throws an error - look into that
+    DIRECT_SPEECH_DELIMITER = /['"”]|&(?:apos|quot);/
     TRAILERS = /\)|\s*<\/.*?>/
 
     def segment(string, add_to: nil, **options)
@@ -51,8 +51,14 @@ module LLT
       @indexing = parse_option(:indexing, options)
       @id = 0 if @indexing
 
+      # newline_boundary is only active when we aren't working with xml!
       nl_boundary  = parse_option(:newline_boundary, options)
-      @sentence_closer = Regexp.union(SENTENCE_CLOSER, /\n{#{nl_boundary}}/)
+
+      @sentence_closer = build_sentence_closer_regexp(nl_boundary)
+    end
+
+    def build_sentence_closer_regexp(nl_boundary)
+      @xml ? SENTENCE_CLOSER : Regexp.union(SENTENCE_CLOSER, /\n{#{nl_boundary}}/)
     end
 
     # Used to normalized wonky whitespace in front of or behind direct speech
@@ -115,7 +121,11 @@ module LLT
 
     def scan_through_string(scanner, sentences = [])
       while scanner.rest?
+        loop_guard = scanner.pos
+
         sentence = scan_until_next_sentence(scanner, sentences)
+
+        raise if scanner.pos == loop_guard
 
         if @xml
           rebuild_xml_tags(scanner, sentence, sentences)
@@ -131,6 +141,10 @@ module LLT
         end
       end
       sentences
+    end
+
+    def scan_to_first_real_text(scanner)
+      scanner.scan_until(/<.*?>\s*(?=\w)/)
     end
 
     def scan_until_next_sentence(scanner, sentences)
@@ -171,7 +185,7 @@ module LLT
     end
 
     def closing_tags_only?(str)
-      str.match(/\A(\s*<.*?\/.*?>\s*)+\z/)
+      str.match(/\A(\s*<\/.*?>\s*|\s*<.*?\/>\s*)+\z/)
     end
 
 
