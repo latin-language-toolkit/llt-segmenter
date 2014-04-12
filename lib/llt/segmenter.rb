@@ -51,8 +51,14 @@ module LLT
       @indexing = parse_option(:indexing, options)
       @id = 0 if @indexing
 
+      # newline_boundary is only active when we aren't working with xml!
       nl_boundary  = parse_option(:newline_boundary, options)
-      @sentence_closer = Regexp.union(SENTENCE_CLOSER, /\n{#{nl_boundary}}/)
+
+      @sentence_closer = build_sentence_closer_regexp(nl_boundary)
+    end
+
+    def build_sentence_closer_regexp(nl_boundary)
+      @xml ? SENTENCE_CLOSER : Regexp.union(SENTENCE_CLOSER, /\n{#{nl_boundary}}/)
     end
 
     # Used to normalized wonky whitespace in front of or behind direct speech
