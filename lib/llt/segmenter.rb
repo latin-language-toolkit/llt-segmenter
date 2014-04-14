@@ -2,6 +2,8 @@ require "llt/constants"
 require "llt/core"
 require "llt/logger"
 require "llt/sentence"
+require "llt/segmenter/version"
+require "llt/segmenter/version_info"
 
 module LLT
   class Segmenter
