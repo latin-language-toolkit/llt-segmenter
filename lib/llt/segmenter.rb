@@ -32,7 +32,7 @@ module LLT
     AWB = ALL_ABBRS_PIPED.split('|').map { |abbr| "(?<=\\s|^|>)#{abbr}" }.join('|')
     # the xml escaped characters cannot be refactored to something along
     # &(?:amp|quot); - it's an invalid pattern in the look-behind
-    SENTENCE_CLOSER = /(?<!#{AWB})\.(?!\.)|[\?!:]|((?<!&amp|&quot|&apos|&lt|&gt);)/
+    SENTENCE_CLOSER = /(?<!#{AWB})\.(?!\.)|[\?!:·]|((?<!&amp|&quot|&apos|&lt|&gt);)/
     DIRECT_SPEECH_DELIMITER = /['"”]|&(?:apos|quot);/
     TRAILERS = /\)|\s*<\/.*?>/
 
