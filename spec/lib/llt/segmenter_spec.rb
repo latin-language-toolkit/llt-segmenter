@@ -181,6 +181,16 @@ describe LLT::Segmenter do
         sentences.should have(2).item
         sentences[1].to_s.should == 'success.'
       end
+
+      describe "when CGI.unescaping HTML characters" do
+        it "acknowledges &apos; as potentially trailing delimiter" do
+          txt = '&apos;text.&apos; success.'
+          unescaped = CGI.unescapeHTML(txt)
+          sentences = segmenter.segment(unescaped)
+          sentences.should have(2).item
+          sentences[1].to_s.should == 'success.'
+        end
+      end
     end
 
     context "newline (\\n) handling" do
