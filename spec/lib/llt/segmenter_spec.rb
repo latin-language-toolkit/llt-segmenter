@@ -204,7 +204,7 @@ describe LLT::Segmenter do
         sentences.should have(2).item
       end
 
-      it "doesn't fall for complex documents IV", :focus do
+      it "doesn't fall for complex documents IV" do
         txt = <<-EOF
           <TEI xmlns="http://www.tei-c.org/ns/1.0">
             <text xml:lang="grc">
