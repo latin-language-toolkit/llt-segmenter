@@ -196,6 +196,9 @@ module LLT
         # broken off texts
         scanner.scan_until(/$/)
       else
+        if scanner.eos? && @xml
+          return ''
+        end
         # try a simple newline as delimiter, if there was no delimiter
         scanner.reset
         @sentence_closer = /\n/

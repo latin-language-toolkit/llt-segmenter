@@ -158,6 +158,51 @@ describe LLT::Segmenter do
         sentences = segmenter.segment(txt, xml: true)
         sentences.should have(1).item
       end
+
+      it "doesn't fall for complex documents" do
+        txt = <<-EOF
+          <tei:TEI xmlns:tei="http://www.tei-c.org/ns/1.0">
+            <tei:text xml:lang="grc">
+              <tei:body>
+               <tei:div type="line">
+                  <milestone ed="P" unit="para"/>μῆνιν ἄειδε θεὰ Πηληϊάδεω Ἀχιλῆος</tei:div>
+            </tei:body>
+            </tei:text>
+          </tei:TEI>
+        EOF
+        sentences = segmenter.segment(txt, xml: true)
+        sentences.should have(1).item
+      end
+
+      it "doesn't fall for complex documents II" do
+        txt = <<-EOF
+          <tei:TEI xmlns:tei="http://www.tei-c.org/ns/1.0">
+            <tei:text xml:lang="grc">
+              <tei:body>
+               <tei:div type="line">
+                  <milestone ed="P" unit="para"/>Arma virum. Test.</tei:div>
+            </tei:body>
+            </tei:text>
+          </tei:TEI>
+        EOF
+        sentences = segmenter.segment(txt, xml: true)
+        sentences.should have(2).item
+      end
+
+      it "doesn't fall for complex documents III" do
+        txt = <<-EOF
+          <tei:TEI xmlns:tei="http://www.tei-c.org/ns/1.0">
+            <tei:text xml:lang="grc">
+              <tei:body>
+               <tei:div type="line">
+                  <milestone ed="P" unit="para"/>Arma virum. Test</tei:div>
+            </tei:body>
+            </tei:text>
+          </tei:TEI>
+        EOF
+        sentences = segmenter.segment(txt, xml: true)
+        sentences.should have(2).item
+      end
     end
 
     context "with xml escaped characters" do
