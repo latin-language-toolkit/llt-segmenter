@@ -127,6 +127,7 @@ module LLT
 
         sentence = scan_until_next_sentence(scanner, sentences)
 
+
         raise if scanner.pos == loop_guard
 
         if @xml
@@ -194,7 +195,7 @@ module LLT
     def rescue_no_delimiters(sentences, scanner)
       if sentences.any?
         # broken off texts
-        scanner.scan_until(/$/)
+        scanner.scan_until(/\Z/)
       else
         if scanner.eos? && @xml
           return ''

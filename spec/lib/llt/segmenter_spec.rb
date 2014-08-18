@@ -203,6 +203,55 @@ describe LLT::Segmenter do
         sentences = segmenter.segment(txt, xml: true)
         sentences.should have(2).item
       end
+
+      it "doesn't fall for complex documents IV", :focus do
+        txt = <<-EOF
+          <TEI xmlns="http://www.tei-c.org/ns/1.0">
+            <text xml:lang="grc">
+              <body>
+                <div1 type="Book" n="1">
+                  <l n="1">
+                    <milestone ed="P" unit="para"/>
+                    μῆνιν ἄειδε θεὰ Πηληϊάδεω Ἀχιλῆος
+                  </l>
+                </div1>
+                <div1 type="Book" n="1">
+                  <l n="2">οὐλομένην, ἣ μυρίʼ Ἀχαιοῖς ἄλγεʼ ἔθηκε,</l>
+                </div1>
+                <div1 type="Book" n="1">
+                  <l n="3">πολλὰς δʼ ἰφθίμους ψυχὰς Ἄϊδι προΐαψεν</l>
+                </div1>
+                <div1 type="Book" n="1">
+                  <l n="4">ἡρώων, αὐτοὺς δὲ ἑλώρια τεῦχε κύνεσσιν</l>
+                </div1>
+                <div1 type="Book" n="1">
+                  <l n="5">οἰωνοῖσί τε πᾶσι, Διὸς δʼ ἐτελείετο βουλή,</l>
+                </div1>
+                <div1 type="Book" n="1">
+                  <l n="6">ἐξ οὗ δὴ τὰ πρῶτα διαστήτην ἐρίσαντε</l>
+                </div1>
+                <div1 type="Book" n="1">
+                  <l n="7">Ἀτρεΐδης τε ἄναξ ἀνδρῶν καὶ δῖος Ἀχιλλεύς.</l>
+                </div1>
+                <div1 type="Book" n="1">
+                  <l n="8">
+                    <milestone ed="P" unit="Para"/>
+                    τίς τʼ ἄρ σφωε θεῶν ἔριδι ξυνέηκε μάχεσθαι;
+                  </l>
+                </div1>
+                <div1 type="Book" n="1">
+                  <l n="9">Λητοῦς καὶ Διὸς υἱός· ὃ γὰρ βασιλῆϊ χολωθεὶς</l>
+                </div1>
+                <div1 type="Book" n="1">
+                  <l n="10">νοῦσον ἀνὰ στρατὸν ὄρσε κακήν, ὀλέκοντο δὲ λαοί,</l>
+                </div1>
+              </body>
+            </text>
+          </TEI>
+        EOF
+        sentences = segmenter.segment(txt, xml: true)
+        sentences.should have(4).item
+      end
     end
 
     context "with xml escaped characters" do
