@@ -127,7 +127,6 @@ module LLT
 
         sentence = scan_until_next_sentence(scanner, sentences)
 
-
         raise if scanner.pos == loop_guard
 
         if @xml
@@ -197,11 +196,11 @@ module LLT
         # broken off texts
         scanner.scan_until(/\Z/)
       else
-        if scanner.eos? && @xml
-          return ''
-        end
+        return '' if @xml
+
         # try a simple newline as delimiter, if there was no delimiter
         scanner.reset
+
         @sentence_closer = /\n/
         if sent = scanner.scan_until(@sentence_closer)
           sent

@@ -252,6 +252,26 @@ describe LLT::Segmenter do
         sentences = segmenter.segment(txt, xml: true)
         sentences.should have(4).item
       end
+
+      it "doesn't fall for complex documents V" do
+        txt = <<-EOF
+          <TEI xmlns="http://www.tei-c.org/ns/1.0">
+            <text xml:lang="grc">
+              <body>
+                <div1 type="Book" n="1">
+                  <l n="1">
+                    <milestone ed="P" unit="para"/>
+                    μῆνιν ἄειδε θεὰ Πηληϊάδεω Ἀχιλῆος
+                  </l>
+                </div1>
+              </body>
+            </text>
+          </TEI>
+        EOF
+        sentences = segmenter.segment(txt, xml: true)
+        # really should be one, but maybe we can get away with it
+        sentences.should have(2).item
+      end
     end
 
     context "with xml escaped characters" do
