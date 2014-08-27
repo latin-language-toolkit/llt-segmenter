@@ -57,10 +57,15 @@ describe LLT::Segmenter do
     end
 
     it "handles more dates" do
-      txt = "Is dies erat a. d. V Ian. Non. Feb. L. App. Pisone ."
+      txt = "Is dies erat a. d. V Ian. Non. Feb. Octob. L. App. Pisone ."
       sentences = segmenter.segment(txt)
-      puts sentences
       sentences.should have(1).item
+    end
+
+    it "handles more abbreviations" do
+      txt = "Coss. Pisone Cicerone aliquae fiunt. Conss aliud verbum est."
+      sentences = segmenter.segment(txt)
+      sentences.should have(2).item
     end
 
     it "are only triggered when they have a leading word boundary" do
