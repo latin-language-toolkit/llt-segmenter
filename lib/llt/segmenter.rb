@@ -129,10 +129,7 @@ module LLT
 
         raise if scanner.pos == loop_guard
 
-        if @xml
-          rebuild_xml_tags(scanner, sentence, sentences)
-          take_all_closing_tags(scanner, sentence)
-        end
+        take_all_closing_tags(scanner, sentence) if @xml
         sentence << trailing_delimiters(scanner)
 
         sentence.strip!
@@ -150,6 +147,23 @@ module LLT
     end
 
     def scan_until_next_sentence(scanner, sentences)
+      sentence = do_scan(scanner, sentences)
+      if @xml
+        while has_open_chevron?(sentence) do
+          next_step = do_scan(scanner, sentences)
+          sentence << (next_step.empty? ? take_rest(scanner) : next_step)
+        end
+      end
+      sentence
+    end
+
+    def take_rest(scanner)
+      rest = scanner.rest
+      scanner.terminate
+      rest
+    end
+
+    def do_scan(scanner, sentences)
       scanner.scan_until(@sentence_closer) ||
         rescue_no_delimiters(sentences, scanner)
     end
@@ -160,23 +174,8 @@ module LLT
       end
     end
 
-    # this is only needed when there is punctuation inside of xml tags
-    def rebuild_xml_tags(scanner, sentence, sentences)
-      if has_open_chevron?(sentence)
-        sentence << scanner.scan_until(/>/)
-        if inside_a_running_sentence?(sentence)
-          sentence << scan_until_next_sentence(scanner, sentences)
-        end
-        rebuild_xml_tags(scanner, sentence, sentences)
-      end
-    end
-
     def has_open_chevron?(sentence)
       sentence.count('<') > sentence.count('>')
-    end
-
-    def inside_a_running_sentence?(sentence)
-      ! sentence.match(/#{@sentence_closer}\s*<.*?>$/)
     end
 
     def take_all_closing_tags(scanner, sentence)
