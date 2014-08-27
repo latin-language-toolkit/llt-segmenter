@@ -106,7 +106,6 @@ describe LLT::Segmenter do
       it "doesn't break with punctuation in element names II" do
         txt = '<grc.test>text.</grc.test> text 2.'
         sentences = segmenter.segment(txt, xml: true)
-        puts sentences
         sentences.should have(2).items
         sentences[0].to_s.should == '<grc.test>text.</grc.test>'
         sentences[1].to_s.should == 'text 2.'
