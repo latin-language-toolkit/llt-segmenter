@@ -268,8 +268,7 @@ describe LLT::Segmenter do
           </TEI>
         EOF
         sentences = segmenter.segment(txt, xml: true)
-        # really should be one, but maybe we can get away with it
-        sentences.should have(2).item
+        sentences.should have(1).item
       end
     end
 
