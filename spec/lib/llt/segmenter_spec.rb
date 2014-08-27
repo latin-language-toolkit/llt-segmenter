@@ -165,7 +165,7 @@ describe LLT::Segmenter do
               <tei:body>
                <tei:div type="line">
                   <milestone ed="P" unit="para"/>μῆνιν ἄειδε θεὰ Πηληϊάδεω Ἀχιλῆος</tei:div>
-            </tei:body>
+              </tei:body>
             </tei:text>
           </tei:TEI>
         EOF
@@ -195,7 +195,7 @@ describe LLT::Segmenter do
               <tei:body>
                <tei:div type="line">
                   <milestone ed="P" unit="para"/>Arma virum. Test</tei:div>
-            </tei:body>
+              </tei:body>
             </tei:text>
           </tei:TEI>
         EOF
@@ -230,7 +230,7 @@ describe LLT::Segmenter do
                   <l n="6">ἐξ οὗ δὴ τὰ πρῶτα διαστήτην ἐρίσαντε</l>
                 </div1>
                 <div1 type="Book" n="1">
-                  <l n="7">Ἀτρεΐδης τε ἄναξ ἀνδρῶν καὶ δῖος Ἀχιλλεύς.</l>
+                  <l n="7">Ἀτρεΐδης <ref/> τε ἄναξ ἀνδρῶν καὶ δῖος Ἀχιλλεύς.</l>
                 </div1>
                 <div1 type="Book" n="1">
                   <l n="8">
@@ -260,7 +260,7 @@ describe LLT::Segmenter do
                 <div1 type="Book" n="1">
                   <l n="1">
                     <milestone ed="P" unit="para"/>
-                    μῆνιν ἄειδε θεὰ Πηληϊάδεω Ἀχιλῆος
+                    μῆνιν <ref/> ἄειδε θεὰ Πηληϊάδεω Ἀχιλῆος
                   </l>
                 </div1>
               </body>
