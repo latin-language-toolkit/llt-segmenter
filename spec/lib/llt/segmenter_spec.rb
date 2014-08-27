@@ -62,12 +62,6 @@ describe LLT::Segmenter do
       sentences.should have(1).item
     end
 
-    it "handles more abbreviations" do
-      txt = "Coss. Pisone Cicerone aliquae fiunt. Conss aliud verbum est."
-      sentences = segmenter.segment(txt)
-      sentences.should have(2).item
-    end
-
     it "are only triggered when they have a leading word boundary" do
       # spec might seem strange, but this didn't work from the start on
       txt = "erat nauta. est."
@@ -81,6 +75,12 @@ describe LLT::Segmenter do
         sentences = segmenter.segment(txt)
         sentences.should have(1).item
       end
+    end
+
+    it "handles 'cos' abbreviations" do
+      txt = "Coss. cos. Pisone Cicerone aliquae fiunt. Conss. aliud verbum est."
+      sentences = segmenter.segment(txt)
+      sentences.should have(2).item
     end
 
     it "splits at :" do
