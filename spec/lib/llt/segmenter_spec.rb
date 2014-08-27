@@ -106,7 +106,6 @@ describe LLT::Segmenter do
       it "doesn't break with punctuation in element names II" do
         txt = '<grc.test>text.</grc.test> text 2.'
         sentences = segmenter.segment(txt, xml: true)
-        puts sentences
         sentences.should have(2).items
         sentences[0].to_s.should == '<grc.test>text.</grc.test>'
         sentences[1].to_s.should == 'text 2.'
@@ -166,7 +165,7 @@ describe LLT::Segmenter do
               <tei:body>
                <tei:div type="line">
                   <milestone ed="P" unit="para"/>μῆνιν ἄειδε θεὰ Πηληϊάδεω Ἀχιλῆος</tei:div>
-            </tei:body>
+              </tei:body>
             </tei:text>
           </tei:TEI>
         EOF
@@ -196,7 +195,7 @@ describe LLT::Segmenter do
               <tei:body>
                <tei:div type="line">
                   <milestone ed="P" unit="para"/>Arma virum. Test</tei:div>
-            </tei:body>
+              </tei:body>
             </tei:text>
           </tei:TEI>
         EOF
@@ -231,7 +230,7 @@ describe LLT::Segmenter do
                   <l n="6">ἐξ οὗ δὴ τὰ πρῶτα διαστήτην ἐρίσαντε</l>
                 </div1>
                 <div1 type="Book" n="1">
-                  <l n="7">Ἀτρεΐδης τε ἄναξ ἀνδρῶν καὶ δῖος Ἀχιλλεύς.</l>
+                  <l n="7">Ἀτρεΐδης <ref/> τε ἄναξ ἀνδρῶν καὶ δῖος Ἀχιλλεύς.</l>
                 </div1>
                 <div1 type="Book" n="1">
                   <l n="8">
@@ -261,7 +260,7 @@ describe LLT::Segmenter do
                 <div1 type="Book" n="1">
                   <l n="1">
                     <milestone ed="P" unit="para"/>
-                    μῆνιν ἄειδε θεὰ Πηληϊάδεω Ἀχιλῆος
+                    μῆνιν <ref/> ἄειδε θεὰ Πηληϊάδεω Ἀχιλῆος
                   </l>
                 </div1>
               </body>
@@ -269,8 +268,7 @@ describe LLT::Segmenter do
           </TEI>
         EOF
         sentences = segmenter.segment(txt, xml: true)
-        # really should be one, but maybe we can get away with it
-        sentences.should have(2).item
+        sentences.should have(1).item
       end
     end
 
