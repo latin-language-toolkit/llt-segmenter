@@ -32,7 +32,29 @@ module LLT
     AWB = ALL_ABBRS_PIPED.split('|').map { |abbr| "(?<=\\s|^|>)#{abbr}" }.join('|')
     # the xml escaped characters cannot be refactored to something along
     # &(?:amp|quot); - it's an invalid pattern in the look-behind
-    SENTENCE_CLOSER = /(?<!#{AWB})\.(?!\.)|[\?!:·]|((?<!&amp|&quot|&apos|&lt|&gt);)/
+
+    # Roman Numbers followed by a dot are treated as sentence closer,
+    # if they are, except for M. and L. because those are abbreviated
+    # names too! We live with this for the moment as we don't think
+    # that M. or L. will be a sentence closer.
+    # So we handle both cases: 'est II. legio' is not a sentence closer,
+    # whereas 'est legio II.' is treated as a closer.
+    NUMBERS = "[IVXLCDM]"
+
+    # Following regex matches (firts line) a dot, which is a) not
+    # preceeded by a number or any other abbreviation defined in
+    # AWB and b) not followed by another dot
+    # OR
+    # it matches (second line) ?, !, :, · or a ;, which is not
+    # preceeded by any encoding stuff
+    # OR
+    # it matches (third line) any dot, which is not preceeded by any
+    # abbreviation defined in AWB and which is followed by any word
+    # starting with an uppercase letter.
+    SENTENCE_CLOSER = /(?<!#{AWB}|#{NUMBERS})\.(?!\.)|
+                       [\?!:·]|((?<!&amp|&quot|&apos|&lt|&gt);)|
+                       (?<!#{AWB})\.(?=\s(<.*?>\s)?[A-Z])(?!\s[A-Z]\w+\.)
+                      /x
     DIRECT_SPEECH_DELIMITER = /['"”]|&(?:apos|quot);/
     TRAILERS = /\)|\s*<\/.*?>/
 
