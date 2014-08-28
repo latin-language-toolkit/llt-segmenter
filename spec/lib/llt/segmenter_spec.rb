@@ -70,15 +70,19 @@ describe LLT::Segmenter do
     end
 
     it "handles dates even with numbers that have an abbr dot" do
-      pending('Not solved yet. Think of M.') do
-        txt = "Is dies erat a. d. V. Kal. Apr. L. Pisone, A. Gabinio consulibus."
-        sentences = segmenter.segment(txt)
-        sentences.should have(1).item
-      end
+      txt = "Is dies erat a. d. V. Kal. Apr. L. Pisone, A. Gabinio consulibus."
+      sentences = segmenter.segment(txt)
+      sentences.should have(1).item
     end
 
     it "handles 'cos' abbreviations" do
       txt = "Coss. cos. Pisone Cicerone aliquae fiunt. Conss. aliud verbum est."
+      sentences = segmenter.segment(txt)
+      sentences.should have(2).item
+    end
+
+    it "handles roman numbers followed by a dot" do
+      txt = "VIII. Oct. aliquid fit. I. M. XIX. CC. numeri sunt."
       sentences = segmenter.segment(txt)
       sentences.should have(2).item
     end

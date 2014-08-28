@@ -32,7 +32,15 @@ module LLT
     AWB = ALL_ABBRS_PIPED.split('|').map { |abbr| "(?<=\\s|^|>)#{abbr}" }.join('|')
     # the xml escaped characters cannot be refactored to something along
     # &(?:amp|quot); - it's an invalid pattern in the look-behind
-    SENTENCE_CLOSER = /(?<!#{AWB})\.(?!\.)|[\?!:·]|((?<!&amp|&quot|&apos|&lt|&gt);)/
+
+    # Roman numbers followed by a dot are not treated as a sentence
+    # closer. We came (for now) to the agreement, that a number followed
+    # by a dot (e.g. VIII.) is more likely to occur in the middle of
+    # a sentence and not at its end where the dot is a period (e.g.
+    # 'est legio II.'). If this assumption proves wrong, remove
+    # NUMBERS from the next two lines.
+    NUMBERS = "[IVXLCDM]"
+    SENTENCE_CLOSER = /(?<!#{AWB}|#{NUMBERS})\.(?!\.)|[\?!:·]|((?<!&amp|&quot|&apos|&lt|&gt);)/
     DIRECT_SPEECH_DELIMITER = /['"”]|&(?:apos|quot);/
     TRAILERS = /\)|\s*<\/.*?>/
 
