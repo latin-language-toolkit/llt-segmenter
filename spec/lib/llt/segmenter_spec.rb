@@ -69,20 +69,47 @@ describe LLT::Segmenter do
       sentences.should have(2).items
     end
 
-    it "handles dates even with numbers that have an abbr dot" do
-      txt = "Is dies erat a. d. V. Kal. Apr. L. Pisone, A. Gabinio consulibus."
-      sentences = segmenter.segment(txt)
-      sentences.should have(1).item
+    describe "numbers and dots" do
+      it "handles dates even with numbers that have an abbr dot" do
+        txt = "Is dies erat a. d. V. Kal. Apr. L. Pisone, A. Gabinio consulibus."
+        sentences = segmenter.segment(txt)
+        sentences.should have(1).item
+      end
+
+      it "handles roman numbers followed by a dot" do
+        txt = "VIII. Oct. aliquid fit. I. et X. numeri sunt."
+        sentences = segmenter.segment(txt)
+        sentences.should have(2).item
+      end
+
+      it "treats dot preceeded by a number as period" do
+        txt = "Ab castris oppidum aberat milia passuum VIII. Id est."
+        sentences = segmenter.segment(txt)
+        sentences.should have(2).item
+      end
+
+      it "treats dot preceeded by a number as period" do
+        txt = "Ab castris oppidum aberat milia passuum X. Id est."
+        sentences = segmenter.segment(txt)
+        sentences.should have(2).item
+      end
+
+      it "treats dot preceeded by a number as period with embedded xml" do
+        txt = "Ab castris oppidum aberat milia passuum I. <ref/> Id est."
+        sentences = segmenter.segment(txt)
+        sentences.should have(2).item
+      end
+
+      it "treats dot preceeded by a number as period with L and M" do
+        pending('L. and M. are abbreviated names too!')
+        txt = "Ab castris oppidum aberat milia passuum M. Id est L."
+        sentences = segmenter.segment(txt)
+        sentences.should have(2).item
+      end
     end
 
     it "handles 'cos' abbreviations" do
       txt = "Coss. cos. Pisone Cicerone aliquae fiunt. Conss. aliud verbum est."
-      sentences = segmenter.segment(txt)
-      sentences.should have(2).item
-    end
-
-    it "handles roman numbers followed by a dot" do
-      txt = "VIII. Oct. aliquid fit. I. M. XIX. CC. numeri sunt."
       sentences = segmenter.segment(txt)
       sentences.should have(2).item
     end
