@@ -30,16 +30,18 @@ describe LLT::Segmenter do
       sentences[2].to_s.should == "Marcus Antonius!"
     end
 
-    it "creates indices by default" do
-      txt = "Cicero est; quis Caesar est? Marcus Antonius!"
-      sentences = segmenter.segment(txt)
-      sentences.map(&:id).should == [1, 2, 3]
-    end
+    describe "with options (indices)" do
+      it "creates indices by default" do
+        txt = "Cicero est; quis Caesar est? Marcus Antonius!"
+        sentences = segmenter.segment(txt)
+        sentences.map(&:id).should == [1, 2, 3]
+      end
 
-    it "indices can be turned off" do
-      txt = "Cicero est; quis Caesar est? Marcus Antonius!"
-      sentences = segmenter.segment(txt, indexing: false)
-      sentences.map(&:id).should == [nil, nil, nil]
+      it "indices can be turned off" do
+        txt = "Cicero est; quis Caesar est? Marcus Antonius!"
+        sentences = segmenter.segment(txt, indexing: false)
+        sentences.map(&:id).should == [nil, nil, nil]
+      end
     end
 
     it "handles abbreviated names" do
@@ -50,16 +52,18 @@ describe LLT::Segmenter do
       sentences[1].to_s.should == "M. Tullius Cicero est."
     end
 
-    it "handles abbreviated dates" do
-      txt = "Is dies erat a. d. V Kal. Apr. L. Pisone, A. Gabinio consulibus."
-      sentences = segmenter.segment(txt)
-      sentences.should have(1).item
-    end
+    describe "handles dates" do
+      it "with abbreviations" do
+        txt = "Is dies erat a. d. V Kal. Apr. L. Pisone, A. Gabinio consulibus."
+        sentences = segmenter.segment(txt)
+        sentences.should have(1).item
+      end
 
-    it "handles more dates" do
-      txt = "Is dies erat a. d. V Ian. Non. Feb. Octob. L. App. Pisone ."
-      sentences = segmenter.segment(txt)
-      sentences.should have(1).item
+      it "with more (and alternative) abbreviations" do
+        txt = "Is dies erat a. d. V Ian. Non. Feb. Octob. L. App. Pisone ."
+        sentences = segmenter.segment(txt)
+        sentences.should have(1).item
+      end
     end
 
     it "are only triggered when they have a leading word boundary" do
@@ -108,10 +112,32 @@ describe LLT::Segmenter do
       end
     end
 
-    it "handles 'cos' abbreviations" do
-      txt = "Coss. cos. Pisone Cicerone aliquae fiunt. Conss. aliud verbum est."
-      sentences = segmenter.segment(txt)
-      sentences.should have(2).item
+    describe "handles abbreviations used mostly in inscriptions" do
+      it "cos" do
+        txt = "Coss. cos. Pisone Cicerone aliquae fiunt. Conss. aliud verbum est."
+        sentences = segmenter.segment(txt)
+        sentences.should have(2).item
+      end
+
+      it "res p." do
+        txt = "Haec res p. subiecta est."
+        sentences = segmenter.segment(txt)
+        sentences.should have(1).item
+      end
+
+      it "f." do
+        txt = "Marcus Cn. f. est."
+        sentences = segmenter.segment(txt)
+        sentences.should have(1).item
+      end
+
+      describe "at the end of a sentence" do
+        it "tr. pl." do
+          txt = "Erat tr. pl. Est homo."
+          sentences = segmenter.segment(txt)
+          sentences.should have(1).item
+        end
+      end
     end
 
     it "splits at :" do
