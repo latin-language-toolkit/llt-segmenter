@@ -108,10 +108,32 @@ describe LLT::Segmenter do
       end
     end
 
-    it "handles 'cos' abbreviations" do
-      txt = "Coss. cos. Pisone Cicerone aliquae fiunt. Conss. aliud verbum est."
-      sentences = segmenter.segment(txt)
-      sentences.should have(2).item
+    describe "handles abbreviations used mostly in inscriptions" do
+      it "cos" do
+        txt = "Coss. cos. Pisone Cicerone aliquae fiunt. Conss. aliud verbum est."
+        sentences = segmenter.segment(txt)
+        sentences.should have(2).item
+      end
+
+      it "res p." do
+        txt = "Haec res p. subiecta est."
+        sentences = segmenter.segment(txt)
+        sentences.should have(1).item
+      end
+
+      it "f." do
+        txt = "Marcus Cn. f. est."
+        sentences = segmenter.segment(txt)
+        sentences.should have(1).item
+      end
+
+      describe "at the end of a sentence" do
+        it "tr. pl." do
+          txt = "Erat tr. pl. Est homo."
+          sentences = segmenter.segment(txt)
+          sentences.should have(1).item
+        end
+      end
     end
 
     it "splits at :" do
