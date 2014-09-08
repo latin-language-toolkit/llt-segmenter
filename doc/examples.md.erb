@@ -1,0 +1,20 @@
+# API Examples
+Example sentences:
+_Arma virumque cano. Tantaene animis caelestibus irae._
+# Basic
+API is only responding when there's an application/xml accept header coming in.
+The input can be provided as plain URL encoded text with the `text` parameter or 
+as URI (also URL encoded) with the `uri` parameter.
+
+<%= example "http://localhost:9292/segment?text=Arma+virumque+cano.+Tantaene+animis+caelestibus+irae?" %>
+<%= example "http://localhost:9292/segment?uri=http%3A%2F%2Fperseids.org%2F101ch2a.tb.txt" %>
+
+## Indexing
+`indexing`: `true` (default) or `false` => determines if @id is set in new sentences
+
+<%= example "http://localhost:9292/segment?text=Arma+virumque+cano.+Tantaene+animis+caelestibus+irae?&indexing=false" %>
+
+## Newline Boundary
+`newline_boundary`: `{number}` `0` (default) => count of consecutive newlines which are used as sentence boundary
+
+<%= example "http://localhost:9292/segment?text=Arma+virumque+cano%0ATantaene+animis+caelestibus+irae%3F&newline_boundary=2" %>
